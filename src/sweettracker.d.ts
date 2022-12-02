@@ -1,9 +1,9 @@
 export interface CompanyList {
-  code: string;
+  Code: string;
   International: string;
   Name: string;
 }
 
 export interface Delivery {
-  code: string;
+  //
 }
