@@ -27,21 +27,22 @@ function Home() {
       console.log(_json);
     });
   };
-  // http://info.sweettracker.co.kr/api/v1/trackingInfo?t_code=04?t_invoice=563295922011?t_key=9V5232OctJLmSrSNFZTC7Q
-  // const { data, isLoading, isError } = useQuery("company", fetchCompany);
-  const { data, isLoading, isError } = useQuery("invoice", fetchInvoice);
+
+  const { data, isLoading, isError } = useQuery("company", fetchCompany);
+  // const { data, isLoading, isError } = useQuery("invoice", fetchInvoice);
 
   if (isLoading) return <h2>Loading...</h2>;
   return (
     <div className="App">
       <h1>내가 편하게 조회하고 싶어서 만든 택배 송장 조회 페이지</h1>
-      {/* <select>
+      <select>
         {data?.map((_data, i) => (
           <option key={i} value={_data.Name}>
             [{_data.International}], {_data.Code}, {_data.Name}
           </option>
         ))}
-      </select> */}
+      </select>
+      <button>조회</button>
     </div>
   );
 }
