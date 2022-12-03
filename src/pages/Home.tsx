@@ -28,21 +28,28 @@ function Home() {
     });
   };
 
-  const { data, isLoading, isError } = useQuery("company", fetchCompany);
+  const { data, isLoading, isError, error } = useQuery("company", fetchCompany);
   // const { data, isLoading, isError } = useQuery("invoice", fetchInvoice);
 
   if (isLoading) return <h2>Loading...</h2>;
+
+  if (isError)
+    return <h2>${(error as Error).message} :: Unable to load data.</h2>;
+
   return (
     <div className="App">
       <h1>내가 편하게 조회하고 싶어서 만든 택배 송장 조회 페이지</h1>
       <select>
         {data?.map((_data, i) => (
-          <option key={i} value={_data.Name}>
-            [{_data.International}], {_data.Code}, {_data.Name}
+          <option key={i} value={_data.Code}>
+            {_data.Name}
           </option>
         ))}
       </select>
-      <button>조회</button>
+      <form>
+        <input type={"text"}></input>
+        <button>조회</button>
+      </form>
     </div>
   );
 }
