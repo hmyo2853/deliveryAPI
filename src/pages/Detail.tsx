@@ -1,7 +1,12 @@
 import React from "react";
+import DetailContents from "../components/DetailContents";
 
 const Detail: React.FC = () => {
-  return <>Detail page</>;
+  return (
+    <>
+      <DetailContents />
+    </>
+  );
 };
 
 export default Detail;

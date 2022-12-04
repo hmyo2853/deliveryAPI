@@ -3,6 +3,7 @@ import { CompanyList, Invoice } from "../sweettracker";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
+import Header from "../components/Header";
 
 const Home: React.FC = () => {
   const API_KEY = import.meta.env.VITE_API_KEY;
@@ -57,7 +58,8 @@ const Home: React.FC = () => {
 
   return (
     <div className="App">
-      <h1>나의 편의를 위해 만들어진 택배 송장 조회 페이지</h1>
+      <Header path={""} existIcon={false} children={"메인페이지 입니다."} />
+      <div>택배 송장 조회 페이지</div>
       <select>
         {_comData?.map((_data, i) => (
           <option key={i} value={_data.Code}>
