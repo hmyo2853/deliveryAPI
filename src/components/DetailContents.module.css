@@ -1,0 +1,4 @@
+.DetailContents {
+  display: flex;
+  flex-direction: column;
+}
