@@ -6,7 +6,7 @@ import Button from "../components/Button";
 import Header from "../components/Header";
 
 const Home: React.FC = () => {
-  const API_KEY = process.env.VERCEL_VITE_APP_API_KEY;
+  const API_KEY = import.meta.env.VERCEL_VITE_APP_API_KEY;
   const [invoice, setInvoice] = useState<Invoice[]>([]);
 
   /** invoice, company url */
