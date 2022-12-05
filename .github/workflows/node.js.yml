@@ -30,4 +30,4 @@ jobs:
       - run: npm test
       - name: "Create env file"
         run: |
-          echo "${{ secrets.VITE_APP_API_KEY }}" > .env
+          echo "${{ secrets.VITE_SECRET_API_KEY }}" > .env
