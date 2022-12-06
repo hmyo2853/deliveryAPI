@@ -4,10 +4,12 @@ import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import Header from "../components/Header";
+import Detail from "./Detail";
 
 const Home: React.FC = () => {
   const API_KEY = import.meta.env.VITE_SECRET_API_KEY;
-  const [invoice, setInvoice] = useState<Invoice[]>([]);
+  const [invoiceNum, setInvoiceNum] = useState<string>("");
+  const [isMain, setIsMain] = useState<boolean>(true);
 
   /** invoice, company url */
   const INVOICE_URL = `http://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=${API_KEY}&t_code=04&t_invoice=563295922011`;
@@ -31,8 +33,18 @@ const Home: React.FC = () => {
         throw new Error(`HTTP Error : status code is ${_res.status}`);
       const _json = await _res.json();
       console.log(_json);
-      // setInvoice(_json);
+      console.log(`보낸 invoice Num : ${invoiceNum}`);
     });
+  };
+
+  /** 조회시 submit 동작 함수 */
+  const onSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  };
+
+  const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInvoiceNum(event.target.value);
+    console.log(invoiceNum);
   };
 
   const {
@@ -56,7 +68,7 @@ const Home: React.FC = () => {
   if (_comLoading)
     return <h2>${(_comError as Error).message} :: Unable to load data.</h2>;
 
-  return (
+  return isMain ? (
     <div className="App">
       <Header path={""} existIcon={false} children={"메인페이지 입니다."} />
       <div>택배 송장 조회 페이지</div>
@@ -67,15 +79,17 @@ const Home: React.FC = () => {
           </option>
         ))}
       </select>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <input type={"text"}></input>
+      <form onSubmit={onSubmitForm}>
+        <input
+          value={invoiceNum}
+          type={"text"}
+          onChange={onChangeInput}
+        ></input>
         <Button onClick={fetchInvoice} text={"조회하기"} />
       </form>
     </div>
+  ) : (
+    <Detail />
   );
 };
 
