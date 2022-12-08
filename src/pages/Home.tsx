@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import { blue } from "@mui/material/colors";
+import LoadingSkeleton from "../components/LoadingSkeleton";
 
 const Home: React.FC = () => {
   const API_KEY = import.meta.env.VITE_SECRET_API_KEY;
@@ -92,7 +93,7 @@ const Home: React.FC = () => {
   } = useQuery("invoice", fetchInvoice, { enabled: false });
 
   // data를 가져올 때 모두 loading
-  if (_comLoading) return <h2>Loading...</h2>;
+  if (_comLoading) return <LoadingSkeleton />;
 
   // company data를 못불러올 경우
   if (_comLoading)
@@ -124,10 +125,11 @@ const Home: React.FC = () => {
           <form className="home_submit" onSubmit={onSubmitForm}>
             <TextField
               id="outlined-basic"
-              label="택배송장번호"
+              label="운송장번호"
               variant="outlined"
               onChange={onChangeInput}
               value={invoiceNum}
+              type="number"
             />
             <Button
               onClick={fetchInvoice}
@@ -137,9 +139,12 @@ const Home: React.FC = () => {
             >
               조회하기
             </Button>
-            {/* <Button onClick={fetchInvoice} text={"조회하기"} /> */}
           </form>
         </div>
+      </div>
+      <div className="description">
+        본 정보는 스마트택배에서 제공받는 정보로, 실제 배송상황과 다를 수
+        있습니다.
       </div>
     </ThemeProvider>
   ) : (

@@ -6,17 +6,22 @@
 }
 
 .home_wrap {
-  margin-top: 2rem;
-  margin: 0 2rem;
+  margin: 4rem 2rem 0 2rem;
 }
 
 .home_submit {
+  margin-top: 2rem;
   display: flex;
   justify-content: center;
   flex-direction: column;
 }
 
-button {
-  padding: 1rem 2rem !important;
-  font-weight: 600 !important;
+.home_submit > button {
+  margin-top: 2rem;
+}
+
+.description {
+  font-size: 1rem;
+  color: #8f8f8f;
+  margin-top: 2rem;
 }

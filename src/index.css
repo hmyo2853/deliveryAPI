@@ -35,3 +35,13 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+button {
+  padding: 1rem 2rem !important;
+  font-weight: 600 !important;
+}
