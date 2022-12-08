@@ -70,7 +70,7 @@ const Home: React.FC = () => {
 
   return isMain ? (
     <div className="App">
-      <Header path={""} existIcon={false} children={"메인페이지 입니다."} />
+      <Header path={""} existIcon={false} logoImg={true} />
       <div>택배 송장 조회 페이지</div>
       <select>
         {_comData?.map((_data, i) => (
