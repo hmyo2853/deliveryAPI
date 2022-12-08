@@ -16,10 +16,10 @@ const Header = ({ logoImg, existIcon, path }: PropsWithChildren<ExistIcon>) => {
       {existIcon ? (
         <Link to={path} relative="path">
           <FontAwesomeIcon icon={faArrowLeft} size="2x" />
-          {logoImg ? (
-            <img src="/src/assets/deliveryAPI-logo.png" alt="logo" />
-          ) : null}
         </Link>
+      ) : null}
+      {logoImg ? (
+        <img src="src\assets\deliveryAPI-logo.png" alt="logo" />
       ) : null}
     </div>
   );
