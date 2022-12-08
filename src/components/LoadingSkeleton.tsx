@@ -3,7 +3,7 @@ import Skeleton from "@mui/material/Skeleton";
 
 const LoadingSkeleton = () => {
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ margin: "0 2rem" }}>
       <Skeleton
         variant="rounded"
         sx={{

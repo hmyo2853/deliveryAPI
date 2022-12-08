@@ -54,12 +54,13 @@ const Home: React.FC = () => {
       if (!_res.ok)
         throw new Error(`HTTP Error : status code is ${_res.status}`);
       const _json = await _res.json();
+      if (!_json.ok) {
+        if (_json.code === "104") {
+          alert("운송장 번호와 택배사를 확인해주세요.");
+          console.log(_json, `${_json.msg}`);
+        }
+      }
       console.log(_json);
-      console.log(
-        `보낸 invoice Num : ${invoiceNum}`,
-        isCompanyOption,
-        INVOICE_URL
-      );
     });
   };
 
@@ -90,13 +91,14 @@ const Home: React.FC = () => {
     isLoading: _invLoading,
     isError: _invIsError,
     error: _invError,
+    refetch: _invRefetch,
   } = useQuery("invoice", fetchInvoice, { enabled: false });
 
   // data를 가져올 때 모두 loading
   if (_comLoading) return <LoadingSkeleton />;
-  //return <LoadingSkeleton />;
+
   // company data를 못불러올 경우
-  if (_comLoading)
+  if (_comIsError)
     return <h2>${(_comError as Error).message} :: Unable to load data.</h2>;
 
   return isMain ? (
@@ -140,12 +142,13 @@ const Home: React.FC = () => {
               조회하기
             </Button>
           </form>
+          <div className="description">
+            본 정보는 스마트택배에서 제공받는 정보로, 실제 배송상황과 다를 수
+            있습니다.
+          </div>
         </div>
       </div>
-      <div className="description">
-        본 정보는 스마트택배에서 제공받는 정보로, 실제 배송상황과 다를 수
-        있습니다.
-      </div>
+      {}
     </ThemeProvider>
   ) : (
     <Detail />
