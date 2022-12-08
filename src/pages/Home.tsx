@@ -94,7 +94,7 @@ const Home: React.FC = () => {
 
   // data를 가져올 때 모두 loading
   if (_comLoading) return <LoadingSkeleton />;
-
+  //return <LoadingSkeleton />;
   // company data를 못불러올 경우
   if (_comLoading)
     return <h2>${(_comError as Error).message} :: Unable to load data.</h2>;
