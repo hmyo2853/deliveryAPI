@@ -1,19 +1,39 @@
 import React, { useState } from "react";
 import { CompanyList, Invoice } from "../sweettracker";
 import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
-import Button from "../components/Button";
 import Header from "../components/Header";
 import Detail from "./Detail";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  TextField,
+} from "@mui/material";
+import Button from "@mui/material/Button";
+import { blue } from "@mui/material/colors";
 
 const Home: React.FC = () => {
   const API_KEY = import.meta.env.VITE_SECRET_API_KEY;
   const [invoiceNum, setInvoiceNum] = useState<string>("");
   const [isMain, setMain] = useState<boolean>(true);
-  const [isCompanyOption, setCompanyOption] = useState<string>("04");
+  const [isCompanyOption, setCompanyOption] = useState<string>("");
+  const [isSelectValue, setSelectValue] = useState<string>("");
+
+  /** mui theme color customization */
+  const theme = createTheme({
+    palette: {
+      primary: {
+        // Purple and green play nicely together.
+        main: blue["A700"],
+      },
+    },
+  });
 
   /** invoice, company url */
-  const INVOICE_URL = `http://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=${API_KEY}&t_code=${isCompanyOption}&t_invoice=563295922011`;
+  const INVOICE_URL = `http://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=${API_KEY}&t_code=${isCompanyOption}&t_invoice=${invoiceNum}`;
   const COMPANY_URL = `http://info.sweettracker.co.kr/api/v1/companylist?t_key=${API_KEY}`;
 
   /** api company list 데이터 받아오기 */
@@ -49,12 +69,12 @@ const Home: React.FC = () => {
 
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInvoiceNum(event.target.value);
-    console.log(invoiceNum);
   };
 
   /** option 선택시 state로 company 값 저장 */
-  const onOptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCompanyOption(event.target.value);
+  const muiSelectOptChange = (e: SelectChangeEvent) => {
+    setCompanyOption(e.target.value as string);
+    setSelectValue(e.target.value as string);
   };
 
   const {
@@ -79,27 +99,49 @@ const Home: React.FC = () => {
     return <h2>${(_comError as Error).message} :: Unable to load data.</h2>;
 
   return isMain ? (
-    <div className="App">
-      <Header path={""} existIcon={false} logoImg={true} />
-      <div className="home_wrap">
-        <div>택배 송장 조회 페이지</div>
-        <select onChange={onOptChange}>
-          {_comData?.map((_data, i) => (
-            <option key={i} value={_data.Code}>
-              {_data.Name}
-            </option>
-          ))}
-        </select>
-        <form onSubmit={onSubmitForm}>
-          <input
-            value={invoiceNum}
-            type={"text"}
-            onChange={onChangeInput}
-          ></input>
-          <Button onClick={fetchInvoice} text={"조회하기"} />
-        </form>
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        <Header path={""} existIcon={false} logoImg={true} />
+        <div className="home_wrap">
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">택배사 선택</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="택배사 선택"
+                value={isSelectValue}
+                onChange={muiSelectOptChange}
+              >
+                {_comData?.map((_data, i) => (
+                  <MenuItem key={i} value={_data.Code}>
+                    {_data.Name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+          <form className="home_submit" onSubmit={onSubmitForm}>
+            <TextField
+              id="outlined-basic"
+              label="택배송장번호"
+              variant="outlined"
+              onChange={onChangeInput}
+              value={invoiceNum}
+            />
+            <Button
+              onClick={fetchInvoice}
+              variant="contained"
+              size="large"
+              disableElevation
+            >
+              조회하기
+            </Button>
+            {/* <Button onClick={fetchInvoice} text={"조회하기"} /> */}
+          </form>
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   ) : (
     <Detail />
   );

@@ -7,4 +7,16 @@
 
 .home_wrap {
   margin-top: 2rem;
+  margin: 0 2rem;
+}
+
+.home_submit {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+button {
+  padding: 1rem 2rem !important;
+  font-weight: 600 !important;
 }
