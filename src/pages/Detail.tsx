@@ -1,11 +1,21 @@
-import React from "react";
 import DetailContents from "../components/DetailContents";
+import { useLocation } from "react-router-dom";
+import { Invoice } from "../sweettracker";
 
-const Detail: React.FC = () => {
+interface RouteState {
+  state: Invoice;
+}
+const Detail = () => {
+  const { state } = useLocation() as RouteState;
   return (
-    <>
-      <DetailContents />
-    </>
+    <DetailContents
+      completeYN={state.completeYN}
+      complete={state.complete}
+      estimate={state.estimate}
+      invoiceNo={state.invoiceNo}
+      itemName={state.itemName}
+      trackingDetails={state.trackingDetails}
+    />
   );
 };
 

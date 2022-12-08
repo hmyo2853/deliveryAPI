@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CompanyList, Invoice } from "../sweettracker";
 import { useQuery } from "react-query";
 import Header from "../components/Header";
-import Detail from "./Detail";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
@@ -19,15 +19,13 @@ import LoadingSkeleton from "../components/LoadingSkeleton";
 const Home: React.FC = () => {
   const API_KEY = import.meta.env.VITE_SECRET_API_KEY;
   const [invoiceNum, setInvoiceNum] = useState<string>("");
-  const [isMain, setMain] = useState<boolean>(true);
   const [isCompanyOption, setCompanyOption] = useState<string>("");
   const [isSelectValue, setSelectValue] = useState<string>("");
-
+  const navigate: NavigateFunction = useNavigate();
   /** mui theme color customization */
   const theme = createTheme({
     palette: {
       primary: {
-        // Purple and green play nicely together.
         main: blue["A700"],
       },
     },
@@ -51,16 +49,21 @@ const Home: React.FC = () => {
   /** 송장번호로 조회시 invoice 데이터 받아오기 */
   const fetchInvoice = async (): Promise<Invoice[] | void> => {
     return fetch(INVOICE_URL).then(async (_res) => {
+      // response error
       if (!_res.ok)
         throw new Error(`HTTP Error : status code is ${_res.status}`);
       const _json = await _res.json();
-      if (!_json.ok) {
-        if (_json.code === "104") {
-          alert("운송장 번호와 택배사를 확인해주세요.");
-          console.log(_json, `${_json.msg}`);
-        }
+      // server data error
+      if (_json.code == "104") {
+        alert("운송장 번호와 택배사를 확인해주세요.");
+        throw new Error(`>>>> HTTP 104 Error : ${_json.msg}`);
+      } else if (_json.code == "105") {
+        alert(
+          "오늘 해당 운송장 조회 수가 초과되었습니다. 내일 다시 조회해주세요."
+        );
+        throw new Error(`>>>> HTTP 105 Error : ${_json.msg}`);
       }
-      console.log(_json);
+      navigate("/detail", _json);
     });
   };
 
@@ -91,8 +94,10 @@ const Home: React.FC = () => {
     isLoading: _invLoading,
     isError: _invIsError,
     error: _invError,
-    refetch: _invRefetch,
-  } = useQuery("invoice", fetchInvoice, { enabled: false });
+  } = useQuery("invoice", fetchInvoice, {
+    enabled: false,
+    refetchOnWindowFocus: false, // window focus 설정
+  });
 
   // data를 가져올 때 모두 loading
   if (_comLoading) return <LoadingSkeleton />;
@@ -101,7 +106,7 @@ const Home: React.FC = () => {
   if (_comIsError)
     return <h2>${(_comError as Error).message} :: Unable to load data.</h2>;
 
-  return isMain ? (
+  return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <Header path={""} existIcon={false} logoImg={true} />
@@ -150,8 +155,6 @@ const Home: React.FC = () => {
       </div>
       {}
     </ThemeProvider>
-  ) : (
-    <Detail />
   );
 };
 
