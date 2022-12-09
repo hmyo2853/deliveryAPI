@@ -18,7 +18,6 @@ const LoadingSkeleton = () => {
         sx={{
           fontSize: "1rem",
           height: "4rem",
-          width: "600px",
           margin: "1rem auto",
           marginTop: "6rem",
         }}
@@ -28,7 +27,6 @@ const LoadingSkeleton = () => {
         sx={{
           fontSize: "1rem",
           height: "4rem",
-          width: "600px",
           margin: "1rem auto",
           marginTop: "1.8rem",
         }}
@@ -38,7 +36,6 @@ const LoadingSkeleton = () => {
         sx={{
           fontSize: "1rem",
           height: "4rem",
-          width: "600px",
           margin: "1.8rem auto",
         }}
       />
