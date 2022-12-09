@@ -2,6 +2,7 @@ import DetailContents from "../components/DetailContents";
 import Header from "../components/Header";
 import { useLocation } from "react-router-dom";
 import { Invoice } from "../sweettracker";
+import Home from "./Home";
 
 interface RouteState {
   state: Invoice;
@@ -9,6 +10,11 @@ interface RouteState {
 
 const Detail = () => {
   const state = (useLocation() as RouteState).state;
+  console.log(state);
+  // /detail로 강제 이동하거나 state값이 없을때 home으로 보내기
+  if (state === null) {
+    return <Home />;
+  }
   return (
     <div className="Detail">
       <Header path={"/"} existIcon={true} logoImg={true} />
@@ -19,6 +25,7 @@ const Detail = () => {
         invoiceNo={state.invoiceNo}
         itemName={state.itemName}
         trackingDetails={state.trackingDetails}
+        lastDetail={state.lastDetail}
       />
     </div>
   );

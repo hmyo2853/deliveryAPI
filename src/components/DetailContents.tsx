@@ -6,22 +6,32 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBox, faTruck } from "@fortawesome/free-solid-svg-icons";
 
 const DetailContents = ({
+  complete,
   estimate,
   invoiceNo,
   itemName,
+  lastDetail,
   trackingDetails,
 }: PropsWithChildren<Invoice>) => {
   return (
     <div className={styles.DetailContents}>
       <List sx={{ width: "100%" }}>
         <ListItem>
-          <ListItemText
-            primary={`송장번호 ${invoiceNo} | ${itemName}`}
-            secondary={`도착 예정 시간 ${estimate}`}
-          />
+          {estimate !== "" ? (
+            <ListItemText
+              primary={`송장번호 ${invoiceNo} | ${itemName}`}
+              secondary={`도착 예정 시간 ${estimate}`}
+            />
+          ) : (
+            <ListItemText
+              primary={`송장번호 ${invoiceNo} | ${itemName}`}
+              secondary={`${lastDetail[0].kind}`}
+            />
+          )}
         </ListItem>
       </List>
       <Divider />
+      {complete ? <></> : null}
       {trackingDetails.map((items, i) => (
         <div className={styles.TrackingDetails} key={i}>
           <List sx={{ width: "100%" }}>
@@ -39,7 +49,7 @@ const DetailContents = ({
                 <>
                   <FontAwesomeIcon icon={faTruck} size="2x" />
                   <ListItemText
-                    primary={`${items.where} | 배달기사 ${items.manName}`}
+                    primary={`${items.kind} | ${items.where} | 배달기사 ${items.manName}`}
                     secondary={`${items.telno2}`}
                   />
                 </>
