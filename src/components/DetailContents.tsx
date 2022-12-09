@@ -1,35 +1,57 @@
 import { Invoice } from "../sweettracker";
 import { PropsWithChildren } from "react";
+import styles from "./DetailContents.module.css";
+import { Divider, List, ListItem, ListItemText } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBox, faTruck } from "@fortawesome/free-solid-svg-icons";
 
 const DetailContents = ({
-  completeYN,
-  complete,
   estimate,
   invoiceNo,
   itemName,
   trackingDetails,
 }: PropsWithChildren<Invoice>) => {
   return (
-    <div>
-      <div className="trackingInvoice_wrap">
-        <div className="trackingTitle">
-          <span>{completeYN}</span>
-          <span>{complete}</span>
-          <span>{estimate}</span>
-          <span>{invoiceNo}</span>
-          <span>{itemName}</span>
+    <div className={styles.DetailContents}>
+      <List sx={{ width: "100%" }}>
+        <ListItem>
+          <ListItemText
+            primary={`송장번호 ${invoiceNo} | ${itemName}`}
+            secondary={`도착 예정 시간 ${estimate}`}
+          />
+        </ListItem>
+      </List>
+      <Divider />
+      {trackingDetails.map((items, i) => (
+        <div className={styles.TrackingDetails} key={i}>
+          <List sx={{ width: "100%" }}>
+            <div className={styles.DetailTime}>{items.timeString}</div>
+            <ListItem>
+              {items.manName == "" ? (
+                <>
+                  <FontAwesomeIcon icon={faBox} size="2x" />
+                  <ListItemText
+                    primary={`${items.where}`}
+                    secondary={`${items.telno}`}
+                  />
+                </>
+              ) : (
+                <>
+                  <FontAwesomeIcon icon={faTruck} size="2x" />
+                  <ListItemText
+                    primary={`${items.where} | 배달기사 ${items.manName}`}
+                    secondary={`${items.telno2}`}
+                  />
+                </>
+              )}
+            </ListItem>
+          </List>
+          <Divider />
         </div>
-        <div>
-          {trackingDetails.map((items, i) => (
-            <div className="trackingDetails" key={i}>
-              <div>{items.kind}</div>
-              <div>{items.manName}</div>
-              <div>{items.telno}</div>
-              <div>{items.telno2}</div>
-              <div>{items.where}</div>
-            </div>
-          ))}
-        </div>
+      ))}
+      <div className="description">
+        본 정보는 스마트택배에서 제공받는 정보로, 실제 배송상황과 다를 수
+        있습니다.
       </div>
     </div>
   );

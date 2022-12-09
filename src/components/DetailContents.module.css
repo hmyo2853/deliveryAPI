@@ -1,2 +1,37 @@
 .DetailContents {
+  margin: 2rem 2rem 4rem 2rem;
+}
+
+.DetailContents > ul > li > div > span {
+  font-weight: bold;
+}
+.DetailContents > ul {
+  background-color: #f7f7fa;
+}
+
+.DetailContents > ul {
+  width: 100%;
+}
+
+.DetailContents > div > ul > li > svg {
+  color: #9fb9ff;
+  width: 2rem;
+  padding: 0 1rem;
+}
+
+.DetailContents > div > ul > li {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.DetailTime {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.875rem;
+  text-align: right;
+  margin-right: 1rem;
+}
+
+.TrackingDetails > ul {
+  padding: 1rem 0;
 }

@@ -10,8 +10,8 @@ interface RouteState {
 const Detail = () => {
   const state = (useLocation() as RouteState).state;
   return (
-    <>
-      <Header path={"/"} existIcon={true} logoImg={false} />
+    <div className="Detail">
+      <Header path={"/"} existIcon={true} logoImg={true} />
       <DetailContents
         completeYN={state.completeYN}
         complete={state.complete}
@@ -20,7 +20,7 @@ const Detail = () => {
         itemName={state.itemName}
         trackingDetails={state.trackingDetails}
       />
-    </>
+    </div>
   );
 };
 

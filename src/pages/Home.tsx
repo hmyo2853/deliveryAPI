@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { CompanyList, Invoice } from "../sweettracker";
 import { useQuery } from "react-query";
-import Header from "../components/Header";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -11,9 +9,12 @@ import {
   InputLabel,
   MenuItem,
   TextField,
+  Button,
 } from "@mui/material";
-import Button from "@mui/material/Button";
 import { blue } from "@mui/material/colors";
+
+import { CompanyList, Invoice } from "../sweettracker";
+import Header from "../components/Header";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 
 const Home: React.FC = () => {
