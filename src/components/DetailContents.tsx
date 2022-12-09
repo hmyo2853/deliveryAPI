@@ -1,7 +1,5 @@
-import Header from "./Header";
-import styles from "./DetailContents.module.css";
-import { PropsWithChildren } from "react";
 import { Invoice } from "../sweettracker";
+import { PropsWithChildren } from "react";
 
 const DetailContents = ({
   completeYN,
@@ -12,8 +10,7 @@ const DetailContents = ({
   trackingDetails,
 }: PropsWithChildren<Invoice>) => {
   return (
-    <div className={styles.DetailContents}>
-      <Header logoImg={false} path={"/"} existIcon={true} />
+    <div>
       <div className="trackingInvoice_wrap">
         <div className="trackingTitle">
           <span>{completeYN}</span>
@@ -23,8 +20,8 @@ const DetailContents = ({
           <span>{itemName}</span>
         </div>
         <div>
-          {trackingDetails.map((items) => (
-            <div className="trackingDetails">
+          {trackingDetails.map((items, i) => (
+            <div className="trackingDetails" key={i}>
               <div>{items.kind}</div>
               <div>{items.manName}</div>
               <div>{items.telno}</div>
