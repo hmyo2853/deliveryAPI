@@ -24,6 +24,7 @@ const Home: React.FC = () => {
   const [invoiceNum, setInvoiceNum] = useState<string>("");
   const [isCompanyOption, setCompanyOption] = useState<string>("");
   const [isSelectValue, setSelectValue] = useState<string>("");
+  const [disabled, setDisabled] = useState<boolean>(true);
   const navigate: NavigateFunction = useNavigate();
   /** mui theme color customization */
   const theme = createTheme({
@@ -35,12 +36,20 @@ const Home: React.FC = () => {
   });
 
   /** invoice, company url */
-  const INVOICE_URL = `http://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=${deliveryKey}&t_code=${isCompanyOption}&t_invoice=${invoiceNum}`;
-  const COMPANY_URL = `http://info.sweettracker.co.kr/api/v1/companylist?t_key=${deliveryKey}`;
+  const INVOICE_URL = (
+    deliveryKey: string,
+    isCompanyOption: string,
+    invoiceNum: string
+  ) =>
+    `http://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=${deliveryKey}&t_code=${isCompanyOption}&t_invoice=${invoiceNum}`;
+  const COMPANY_URL = (deliveryKey: string) =>
+    `http://info.sweettracker.co.kr/api/v1/companylist?t_key=${deliveryKey}`;
 
   /** api company list 데이터 받아오기 */
   const fetchCompany = async (): Promise<CompanyList[] | void> => {
-    return fetch(COMPANY_URL).then(async (_res) => {
+    if (!deliveryKey) return setDisabled(false);
+
+    return fetch(COMPANY_URL(deliveryKey)).then(async (_res) => {
       if (!_res.ok)
         throw new Error(`HTTP Error : status code is ${_res.status}`);
       const _json = await _res.json();
@@ -51,39 +60,35 @@ const Home: React.FC = () => {
 
   /** 송장번호로 조회시 invoice 데이터 받아오기 */
   const fetchInvoice = async (): Promise<Invoice[] | void> => {
-    return fetch(INVOICE_URL).then(async (_res) => {
-      // response error
-      if (!_res.ok)
-        throw new Error(`HTTP Error : status code is ${_res.status}`);
-      const _json = await _res.json();
-      // server data error
-      if (_json.code == "104") {
-        alert("운송장 번호와 택배사를 확인해주세요.");
-        throw new Error(`>>>> HTTP 104 Error : ${_json.msg}`);
-      } else if (_json.code == "105") {
-        alert(
-          "오늘 해당 운송장 조회 수가 초과되었습니다. 내일 다시 조회해주세요."
-        );
-        throw new Error(`>>>> HTTP 105 Error : ${_json.msg}`);
-      }
-      navigate("/detail", { state: _json });
-    });
-  };
-  /** firebase fetch api key */
-
-  const fetchFirestoreKey = async (): Promise<firebaseData | void> => {
-    const keys = firestore.collection("SECRET_API_KEYS");
-    return keys
-      .doc("LfLkFm9v7SUNH5XKQ3Yy")
-      .get()
-      .then(async (doc) => {
-        // "bucket_item" document가 존재하면 아래 작업 수행
-        if (doc.exists) {
-          // document의 데이터를 가져옴
-          const data = (await doc.data()) as firebaseData;
-          setDeliveryKey(data.delivery);
+    return fetch(INVOICE_URL(deliveryKey, isCompanyOption, invoiceNum)).then(
+      async (_res) => {
+        // response error
+        if (!_res.ok)
+          throw new Error(`HTTP Error : status code is ${_res.status}`);
+        const _json = await _res.json();
+        // server data error
+        if (_json.code == "104") {
+          alert("운송장 번호와 택배사를 확인해주세요.");
+          throw new Error(`>>>> HTTP 104 Error : ${_json.msg}`);
+        } else if (_json.code == "105") {
+          alert(
+            "오늘 해당 운송장 조회 수가 초과되었습니다. 내일 다시 조회해주세요."
+          );
+          throw new Error(`>>>> HTTP 105 Error : ${_json.msg}`);
         }
-      });
+        navigate("/detail", { state: _json });
+      }
+    );
+  };
+
+  /** firebase fetch api key */
+  const fetchFirestoreKey = async (): Promise<firebaseData | void> => {
+    const keys = await firestore
+      .collection("SECRET_API_KEYS")
+      .doc("LfLkFm9v7SUNH5XKQ3Yy")
+      .get();
+    const data = keys.data() as firebaseData;
+    setDeliveryKey(data.delivery);
   };
 
   /** 조회시 submit 동작 함수 */
@@ -118,7 +123,9 @@ const Home: React.FC = () => {
     refetchOnWindowFocus: false, // window focus 설정
   });
 
-  const { data: _firestoreKey } = useQuery("apiKey", fetchFirestoreKey);
+  useEffect(() => {
+    fetchFirestoreKey();
+  }, [deliveryKey]);
 
   // data를 가져올 때 모두 loading
   if (_comLoading) return <LoadingSkeleton />;
@@ -133,7 +140,7 @@ const Home: React.FC = () => {
         <Header path={""} existIcon={false} logoImg={true} />
         <div className="home_wrap">
           <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth>
+            <FormControl fullWidth disabled={disabled}>
               <InputLabel id="demo-simple-select-label">택배사 선택</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
