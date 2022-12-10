@@ -26,3 +26,7 @@ export interface Invoice {
     }
   ];
 }
+
+export interface firebaseData {
+  delivery: string;
+}

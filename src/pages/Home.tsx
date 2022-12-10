@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -13,12 +13,14 @@ import {
 } from "@mui/material";
 import { blue } from "@mui/material/colors";
 
-import { CompanyList, Invoice } from "../sweettracker";
+import { CompanyList, Invoice, firebaseData } from "../sweettracker";
 import Header from "../components/Header";
 import LoadingSkeleton from "../components/LoadingSkeleton";
+// firebase api key 가져오기
+import { firestore } from "../fbase";
 
 const Home: React.FC = () => {
-  const API_KEY = import.meta.env.VITE_SECRET_API_KEY;
+  const [deliveryKey, setDeliveryKey] = useState<string>("");
   const [invoiceNum, setInvoiceNum] = useState<string>("");
   const [isCompanyOption, setCompanyOption] = useState<string>("");
   const [isSelectValue, setSelectValue] = useState<string>("");
@@ -33,8 +35,8 @@ const Home: React.FC = () => {
   });
 
   /** invoice, company url */
-  const INVOICE_URL = `http://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=${API_KEY}&t_code=${isCompanyOption}&t_invoice=${invoiceNum}`;
-  const COMPANY_URL = `http://info.sweettracker.co.kr/api/v1/companylist?t_key=${API_KEY}`;
+  const INVOICE_URL = `http://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=${deliveryKey}&t_code=${isCompanyOption}&t_invoice=${invoiceNum}`;
+  const COMPANY_URL = `http://info.sweettracker.co.kr/api/v1/companylist?t_key=${deliveryKey}`;
 
   /** api company list 데이터 받아오기 */
   const fetchCompany = async (): Promise<CompanyList[] | void> => {
@@ -66,6 +68,22 @@ const Home: React.FC = () => {
       }
       navigate("/detail", { state: _json });
     });
+  };
+  /** firebase fetch api key */
+
+  const fetchFirestoreKey = async (): Promise<firebaseData | void> => {
+    const keys = firestore.collection("SECRET_API_KEYS");
+    return keys
+      .doc("LfLkFm9v7SUNH5XKQ3Yy")
+      .get()
+      .then(async (doc) => {
+        // "bucket_item" document가 존재하면 아래 작업 수행
+        if (doc.exists) {
+          // document의 데이터를 가져옴
+          const data = (await doc.data()) as firebaseData;
+          setDeliveryKey(data.delivery);
+        }
+      });
   };
 
   /** 조회시 submit 동작 함수 */
@@ -99,6 +117,8 @@ const Home: React.FC = () => {
     enabled: false,
     refetchOnWindowFocus: false, // window focus 설정
   });
+
+  const { data: _firestoreKey } = useQuery("apiKey", fetchFirestoreKey);
 
   // data를 가져올 때 모두 loading
   if (_comLoading) return <LoadingSkeleton />;
