@@ -13,19 +13,29 @@ import {
 } from "@mui/material";
 import { blue } from "@mui/material/colors";
 
-import { CompanyList, Invoice, firebaseData } from "../sweettracker";
+import { CompanyList, Invoice, firebaseData, Supabase } from "../sweettracker";
 import Header from "../components/Header";
 import LoadingSkeleton from "../components/LoadingSkeleton";
-// firebase api key 가져오기
-import { firestore } from "../fbase";
+// supabase API key 가져오기
+import { supabase } from "../supabaseClient";
 
 const Home: React.FC = () => {
   const [deliveryKey, setDeliveryKey] = useState<string>("");
   const [invoiceNum, setInvoiceNum] = useState<string>("");
   const [isCompanyOption, setCompanyOption] = useState<string>("");
   const [isSelectValue, setSelectValue] = useState<string>("");
-  const [disabled, setDisabled] = useState<boolean>(true);
+  const [disabled, setDisabled] = useState<boolean>(false);
   const navigate: NavigateFunction = useNavigate();
+
+  /** supabase get api key */
+  const getStaticProps = async () => {
+    const TABLE_NAME = "delivery-api-key";
+    const { data } = await supabase.from(TABLE_NAME).select("delivery");
+    data?.map((items) => {
+      setDeliveryKey(items.delivery);
+    });
+  };
+
   /** mui theme color customization */
   const theme = createTheme({
     palette: {
@@ -47,13 +57,14 @@ const Home: React.FC = () => {
 
   /** api company list 데이터 받아오기 */
   const fetchCompany = async (): Promise<CompanyList[] | void> => {
-    if (!deliveryKey) return setDisabled(false);
+    if (!deliveryKey) return setDisabled(true);
 
     return fetch(COMPANY_URL(deliveryKey)).then(async (_res) => {
       if (!_res.ok)
         throw new Error(`HTTP Error : status code is ${_res.status}`);
       const _json = await _res.json();
       const _company = _json.Company as CompanyList[];
+      setDisabled(false);
       return _company;
     });
   };
@@ -79,16 +90,6 @@ const Home: React.FC = () => {
         navigate("/detail", { state: _json });
       }
     );
-  };
-
-  /** firebase fetch api key */
-  const fetchFirestoreKey = async (): Promise<firebaseData | void> => {
-    const keys = await firestore
-      .collection("SECRET_API_KEYS")
-      .doc("LfLkFm9v7SUNH5XKQ3Yy")
-      .get();
-    const data = keys.data() as firebaseData;
-    setDeliveryKey(data.delivery);
   };
 
   /** 조회시 submit 동작 함수 */
@@ -124,8 +125,8 @@ const Home: React.FC = () => {
   });
 
   useEffect(() => {
-    fetchFirestoreKey();
-  }, [deliveryKey]);
+    getStaticProps();
+  }, []);
 
   // data를 가져올 때 모두 loading
   if (_comLoading) return <LoadingSkeleton />;

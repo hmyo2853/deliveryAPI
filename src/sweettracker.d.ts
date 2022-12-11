@@ -30,3 +30,7 @@ export interface Invoice {
 export interface firebaseData {
   delivery: string;
 }
+
+export interface Supabase {
+  delivery: string;
+}

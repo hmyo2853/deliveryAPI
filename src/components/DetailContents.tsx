@@ -41,7 +41,7 @@ const DetailContents = ({
                 <>
                   <FontAwesomeIcon icon={faBox} size="2x" />
                   <ListItemText
-                    primary={`${items.where}`}
+                    primary={`[${items.kind}] ${items.where}`}
                     secondary={`${items.telno}`}
                   />
                 </>
