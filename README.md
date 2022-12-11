@@ -39,6 +39,6 @@
 - React: 컴포넌트 기반의 화면구성, Virtual DOM으로 인한 속도 향상, SPA(싱글 페이지 애플리케이션)
 - TypeScript: 초기 데이터와 컴포넌트 사이에 전달되는 데이터의 컴파일 오류를 방지하기 위해 사용
 - React-Query: 데이터 패칭시 로딩, 에러 state 관리를 쉽게 하기 위해 사용
-- SASS:
+- SASS/SCSS: 변수로 css 유지보수가 용이하기 위해 사용
 - Vite: build 속도를 빠르게 하기 위해 사용
 - MUI: 통일된 UI style을 적용하기 위해 사용
