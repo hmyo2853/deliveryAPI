@@ -23,7 +23,7 @@ const Header = ({
         </Link>
       ) : null}
       {logoImg ? (
-        <img src="src\assets\deliveryAPI-logo.png" alt="logo" />
+        <img src="src/assets/deliveryAPI-logo.png" alt="logo" />
       ) : null}
     </div>
   );

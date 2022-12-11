@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { blue } from "@mui/material/colors";
 
-import { CompanyList, Invoice, firebaseData, Supabase } from "../sweettracker";
+import { CompanyList, Invoice } from "../sweettracker";
 import Header from "../components/Header";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 // supabase API key 가져오기
