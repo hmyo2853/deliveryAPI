@@ -24,7 +24,6 @@ const Home: React.FC = () => {
   const [invoiceNum, setInvoiceNum] = useState<string>("");
   const [isCompanyOption, setCompanyOption] = useState<string>("");
   const [isSelectValue, setSelectValue] = useState<string>("");
-  const [disabled, setDisabled] = useState<boolean>(false);
   const navigate: NavigateFunction = useNavigate();
 
   /** supabase get api key */
@@ -57,14 +56,13 @@ const Home: React.FC = () => {
 
   /** api company list 데이터 받아오기 */
   const fetchCompany = async (): Promise<CompanyList[] | void> => {
-    if (!deliveryKey) return setDisabled(true);
+    if (!deliveryKey) return;
 
     return fetch(COMPANY_URL(deliveryKey)).then(async (_res) => {
       if (!_res.ok)
         throw new Error(`HTTP Error : status code is ${_res.status}`);
       const _json = await _res.json();
       const _company = _json.Company as CompanyList[];
-      setDisabled(false);
       return _company;
     });
   };
@@ -141,7 +139,7 @@ const Home: React.FC = () => {
         <Header path={""} existIcon={false} logoImg={true} />
         <div className="home_wrap">
           <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth disabled={disabled}>
+            <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">택배사 선택</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
