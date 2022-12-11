@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import { Link } from "react-router-dom";
-import styles from "./Header.module.css";
+import styles from "./Header.module.sass";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import logoPng from "../assets/deliveryAPI-logo.png";
