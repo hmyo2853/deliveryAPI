@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { CompanyList, Invoice } from "../sweettracker";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import Header from "../components/Header";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -11,17 +9,33 @@ import {
   InputLabel,
   MenuItem,
   TextField,
+  Button,
 } from "@mui/material";
-import Button from "@mui/material/Button";
 import { blue } from "@mui/material/colors";
+
+import { CompanyList, Invoice, firebaseData, Supabase } from "../sweettracker";
+import Header from "../components/Header";
 import LoadingSkeleton from "../components/LoadingSkeleton";
+// supabase API key 가져오기
+import { supabase } from "../supabaseClient";
 
 const Home: React.FC = () => {
-  const API_KEY = import.meta.env.VITE_SECRET_API_KEY;
+  const [deliveryKey, setDeliveryKey] = useState<string>("");
   const [invoiceNum, setInvoiceNum] = useState<string>("");
   const [isCompanyOption, setCompanyOption] = useState<string>("");
   const [isSelectValue, setSelectValue] = useState<string>("");
+  const [disabled, setDisabled] = useState<boolean>(false);
   const navigate: NavigateFunction = useNavigate();
+
+  /** supabase get api key */
+  const getStaticProps = async () => {
+    const TABLE_NAME = "delivery-api-key";
+    const { data } = await supabase.from(TABLE_NAME).select("delivery");
+    data?.map((items) => {
+      setDeliveryKey(items.delivery);
+    });
+  };
+
   /** mui theme color customization */
   const theme = createTheme({
     palette: {
@@ -32,39 +46,50 @@ const Home: React.FC = () => {
   });
 
   /** invoice, company url */
-  const INVOICE_URL = `http://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=${API_KEY}&t_code=${isCompanyOption}&t_invoice=${invoiceNum}`;
-  const COMPANY_URL = `http://info.sweettracker.co.kr/api/v1/companylist?t_key=${API_KEY}`;
+  const INVOICE_URL = (
+    deliveryKey: string,
+    isCompanyOption: string,
+    invoiceNum: string
+  ) =>
+    `http://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=${deliveryKey}&t_code=${isCompanyOption}&t_invoice=${invoiceNum}`;
+  const COMPANY_URL = (deliveryKey: string) =>
+    `http://info.sweettracker.co.kr/api/v1/companylist?t_key=${deliveryKey}`;
 
   /** api company list 데이터 받아오기 */
   const fetchCompany = async (): Promise<CompanyList[] | void> => {
-    return fetch(COMPANY_URL).then(async (_res) => {
+    if (!deliveryKey) return setDisabled(true);
+
+    return fetch(COMPANY_URL(deliveryKey)).then(async (_res) => {
       if (!_res.ok)
         throw new Error(`HTTP Error : status code is ${_res.status}`);
       const _json = await _res.json();
       const _company = _json.Company as CompanyList[];
+      setDisabled(false);
       return _company;
     });
   };
 
   /** 송장번호로 조회시 invoice 데이터 받아오기 */
   const fetchInvoice = async (): Promise<Invoice[] | void> => {
-    return fetch(INVOICE_URL).then(async (_res) => {
-      // response error
-      if (!_res.ok)
-        throw new Error(`HTTP Error : status code is ${_res.status}`);
-      const _json = await _res.json();
-      // server data error
-      if (_json.code == "104") {
-        alert("운송장 번호와 택배사를 확인해주세요.");
-        throw new Error(`>>>> HTTP 104 Error : ${_json.msg}`);
-      } else if (_json.code == "105") {
-        alert(
-          "오늘 해당 운송장 조회 수가 초과되었습니다. 내일 다시 조회해주세요."
-        );
-        throw new Error(`>>>> HTTP 105 Error : ${_json.msg}`);
+    return fetch(INVOICE_URL(deliveryKey, isCompanyOption, invoiceNum)).then(
+      async (_res) => {
+        // response error
+        if (!_res.ok)
+          throw new Error(`HTTP Error : status code is ${_res.status}`);
+        const _json = await _res.json();
+        // server data error
+        if (_json.code == "104") {
+          alert("운송장 번호와 택배사를 확인해주세요.");
+          throw new Error(`>>>> HTTP 104 Error : ${_json.msg}`);
+        } else if (_json.code == "105") {
+          alert(
+            "오늘 해당 운송장 조회 수가 초과되었습니다. 내일 다시 조회해주세요."
+          );
+          throw new Error(`>>>> HTTP 105 Error : ${_json.msg}`);
+        }
+        navigate("/detail", { state: _json });
       }
-      navigate("/detail", { state: _json });
-    });
+    );
   };
 
   /** 조회시 submit 동작 함수 */
@@ -99,6 +124,10 @@ const Home: React.FC = () => {
     refetchOnWindowFocus: false, // window focus 설정
   });
 
+  useEffect(() => {
+    getStaticProps();
+  }, []);
+
   // data를 가져올 때 모두 loading
   if (_comLoading) return <LoadingSkeleton />;
 
@@ -112,7 +141,7 @@ const Home: React.FC = () => {
         <Header path={""} existIcon={false} logoImg={true} />
         <div className="home_wrap">
           <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth>
+            <FormControl fullWidth disabled={disabled}>
               <InputLabel id="demo-simple-select-label">택배사 선택</InputLabel>
               <Select
                 labelId="demo-simple-select-label"

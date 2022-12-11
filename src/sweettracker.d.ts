@@ -10,6 +10,11 @@ export interface Invoice {
   estimate: string;
   invoiceNo: string;
   itemName: string;
+  lastDetail: [
+    {
+      kind: string;
+    }
+  ];
   trackingDetails: [
     {
       kind: string;
@@ -20,4 +25,12 @@ export interface Invoice {
       where: string;
     }
   ];
+}
+
+export interface firebaseData {
+  delivery: string;
+}
+
+export interface Supabase {
+  delivery: string;
 }

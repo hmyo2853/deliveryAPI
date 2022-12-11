@@ -6,8 +6,7 @@
   background-color: white;
 }
 
-.home_wrap,
-.trackingInvoice_wrap {
+.home_wrap {
   margin: 4rem 2rem 0 2rem;
 }
 
@@ -26,9 +25,4 @@
   font-size: 1rem;
   color: #8f8f8f;
   margin-top: 2rem;
-}
-.trackingInvoice {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
 }
