@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -16,24 +16,13 @@ import { blue } from "@mui/material/colors";
 import { CompanyList, Invoice } from "../sweettracker";
 import Header from "../components/Header";
 import LoadingSkeleton from "../components/LoadingSkeleton";
-// supabase API key 가져오기
-import { supabase } from "../supabaseClient";
 
 const Home: React.FC = () => {
-  const [deliveryKey, setDeliveryKey] = useState<string>("");
+  const deliveryKey = import.meta.env.VITE_REACT_D_KEY;
   const [invoiceNum, setInvoiceNum] = useState<string>("");
   const [isCompanyOption, setCompanyOption] = useState<string>("");
   const [isSelectValue, setSelectValue] = useState<string>("");
   const navigate: NavigateFunction = useNavigate();
-
-  /** supabase get api key */
-  const getStaticProps = async () => {
-    const TABLE_NAME = "delivery-api-key";
-    const { data } = await supabase.from(TABLE_NAME).select("delivery");
-    data?.map((items) => {
-      setDeliveryKey(items.delivery);
-    });
-  };
 
   /** mui theme color customization */
   const theme = createTheme({
@@ -45,20 +34,12 @@ const Home: React.FC = () => {
   });
 
   /** invoice, company url */
-  const INVOICE_URL = (
-    deliveryKey: string,
-    isCompanyOption: string,
-    invoiceNum: string
-  ) =>
-    `http://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=${deliveryKey}&t_code=${isCompanyOption}&t_invoice=${invoiceNum}`;
-  const COMPANY_URL = (deliveryKey: string) =>
-    `http://info.sweettracker.co.kr/api/v1/companylist?t_key=${deliveryKey}`;
+  const INVOICE_URL = `http://info.sweettracker.co.kr/api/v1/trackingInfo?t_key=${deliveryKey}&t_code=${isCompanyOption}&t_invoice=${invoiceNum}`;
+  const COMPANY_URL = `http://info.sweettracker.co.kr/api/v1/companylist?t_key=${deliveryKey}`;
 
   /** api company list 데이터 받아오기 */
   const fetchCompany = async (): Promise<CompanyList[] | void> => {
-    if (!deliveryKey) return;
-
-    return fetch(COMPANY_URL(deliveryKey)).then(async (_res) => {
+    return fetch(COMPANY_URL).then(async (_res) => {
       if (!_res.ok)
         throw new Error(`HTTP Error : status code is ${_res.status}`);
       const _json = await _res.json();
@@ -69,25 +50,23 @@ const Home: React.FC = () => {
 
   /** 송장번호로 조회시 invoice 데이터 받아오기 */
   const fetchInvoice = async (): Promise<Invoice[] | void> => {
-    return fetch(INVOICE_URL(deliveryKey, isCompanyOption, invoiceNum)).then(
-      async (_res) => {
-        // response error
-        if (!_res.ok)
-          throw new Error(`HTTP Error : status code is ${_res.status}`);
-        const _json = await _res.json();
-        // server data error
-        if (_json.code == "104") {
-          alert("운송장 번호와 택배사를 확인해주세요.");
-          throw new Error(`>>>> HTTP 104 Error : ${_json.msg}`);
-        } else if (_json.code == "105") {
-          alert(
-            "오늘 해당 운송장 조회 수가 초과되었습니다. 내일 다시 조회해주세요."
-          );
-          throw new Error(`>>>> HTTP 105 Error : ${_json.msg}`);
-        }
-        navigate("/detail", { state: _json });
+    return fetch(INVOICE_URL).then(async (_res) => {
+      // response error
+      if (!_res.ok)
+        throw new Error(`HTTP Error : status code is ${_res.status}`);
+      const _json = await _res.json();
+      // server data error
+      if (_json.code == "104") {
+        alert("운송장 번호와 택배사를 확인해주세요.");
+        throw new Error(`>>>> HTTP 104 Error : ${_json.msg}`);
+      } else if (_json.code == "105") {
+        alert(
+          "오늘 해당 운송장 조회 수가 초과되었습니다. 내일 다시 조회해주세요."
+        );
+        throw new Error(`>>>> HTTP 105 Error : ${_json.msg}`);
       }
-    );
+      navigate("/detail", { state: _json });
+    });
   };
 
   /** 조회시 submit 동작 함수 */
@@ -121,10 +100,6 @@ const Home: React.FC = () => {
     enabled: false,
     refetchOnWindowFocus: false, // window focus 설정
   });
-
-  useEffect(() => {
-    getStaticProps();
-  }, []);
 
   // data를 가져올 때 모두 loading
   if (_comLoading) return <LoadingSkeleton />;

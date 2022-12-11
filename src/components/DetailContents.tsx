@@ -1,6 +1,6 @@
 import { Invoice } from "../sweettracker";
 import { PropsWithChildren } from "react";
-import styles from "./DetailContents.module.css";
+import styles from "./DetailContents.module.sass";
 import { Divider, List, ListItem, ListItemText } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBox, faTruck } from "@fortawesome/free-solid-svg-icons";
