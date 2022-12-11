@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import logoPng from "../assets/deliveryAPI-logo.png";
 
 interface HeaderProps {
   logoImg: boolean;
@@ -22,9 +23,7 @@ const Header = ({
           <FontAwesomeIcon icon={faArrowLeft} size="2x" />
         </Link>
       ) : null}
-      {logoImg ? (
-        <img src="src/assets/deliveryAPI-logo.png" alt="logo" />
-      ) : null}
+      {logoImg ? <img src={logoPng} alt="logo" /> : null}
     </div>
   );
 };
