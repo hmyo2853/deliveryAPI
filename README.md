@@ -20,7 +20,7 @@
 
 ## 최종 구현 화면
 
-- vercel - [https://delivery-api.vercel.app/](https://delivery-api.vercel.app/)
+- vercel - [https://nezip-delivery.vercel.app/](https://nezip-delivery.vercel.app/)
 
 <br>
 
