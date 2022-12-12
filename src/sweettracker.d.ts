@@ -7,7 +7,7 @@ export interface CompanyList {
 export interface Invoice {
   complete: boolean;
   completeYN: string;
-  estimate: string;
+  estimate: string | null;
   invoiceNo: string;
   itemName: string;
   lastDetail: [
