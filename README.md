@@ -1,6 +1,6 @@
 ### Toy Project - 내집앞택배
 
-<img src="src/assets/800x400.PNG" width="100%" alt="metaImg"/>
+<img src="src/assets/800x400.png" width="100%" alt="metaImg"/>
 
 택배 api를 사용한 택배 현황 조회 웹 페이지 구현하기
 
