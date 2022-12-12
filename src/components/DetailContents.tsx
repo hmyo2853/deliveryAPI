@@ -12,7 +12,7 @@ const DetailContents = ({
   lastDetail,
   trackingDetails,
 }: PropsWithChildren<Invoice>) => {
-  console.log(estimate, typeof estimate);
+  // trackingDetail 정보가 없을때 상단만 출력
   if (trackingDetails.length < 1) {
     return (
       <div className={styles.DetailContents}>
@@ -37,6 +37,7 @@ const DetailContents = ({
       </div>
     );
   }
+
   return (
     <div className={styles.DetailContents}>
       <List sx={{ width: "100%" }}>
