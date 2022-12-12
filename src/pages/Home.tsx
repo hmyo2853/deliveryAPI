@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { useQuery } from "react-query";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import {
+  NavigateFunction,
+  createSearchParams,
+  useNavigate,
+} from "react-router-dom";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
@@ -65,7 +69,13 @@ const Home: React.FC = () => {
         );
         throw new Error(`>>>> HTTP 105 Error : ${_json.msg}`);
       }
-      navigate(`/detail/${invoiceNum}`, { state: _json });
+      navigate(
+        {
+          pathname: "/detail",
+          search: `?invoice=${invoiceNum}`,
+        },
+        { state: _json }
+      );
     });
   };
 
