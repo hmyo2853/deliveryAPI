@@ -10,11 +10,9 @@ export interface Invoice {
   estimate: string | null;
   invoiceNo: string;
   itemName: string;
-  lastDetail: [
-    {
-      kind: string;
-    }
-  ];
+  lastStateDetail: {
+    kind: string;
+  };
   trackingDetails: [
     {
       kind: string;

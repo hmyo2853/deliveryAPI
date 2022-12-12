@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "react-query";
-import {
-  NavigateFunction,
-  createSearchParams,
-  useNavigate,
-} from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {

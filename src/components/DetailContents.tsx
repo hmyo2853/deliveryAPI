@@ -9,7 +9,7 @@ const DetailContents = ({
   estimate,
   invoiceNo,
   itemName,
-  lastDetail,
+  lastStateDetail,
   trackingDetails,
 }: PropsWithChildren<Invoice>) => {
   // trackingDetail 정보가 없을때 상단만 출력
@@ -42,15 +42,15 @@ const DetailContents = ({
     <div className={styles.DetailContents}>
       <List sx={{ width: "100%" }}>
         <ListItem>
-          {estimate !== "" ? (
+          {estimate == null ? (
             <ListItemText
               primary={`송장번호 ${invoiceNo} | ${itemName}`}
-              secondary={`도착 예정 시간 ${estimate}`}
+              secondary={`${lastStateDetail.kind}`}
             />
           ) : (
             <ListItemText
               primary={`송장번호 ${invoiceNo} | ${itemName}`}
-              secondary={`${lastDetail[0].kind}`}
+              secondary={`도착 예정 시간 ${estimate}`}
             />
           )}
         </ListItem>

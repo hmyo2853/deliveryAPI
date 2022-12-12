@@ -10,7 +10,7 @@ interface RouteState {
 
 const Detail = () => {
   const state = (useLocation() as RouteState).state;
-  const { invoice } = useParams<{ invoice?: string }>();
+  console.log(state);
   // /detail로 강제 이동하거나 state값이 없을때 home으로 보내기
   if (state === null) {
     return <Home />;
@@ -25,7 +25,7 @@ const Detail = () => {
         invoiceNo={state.invoiceNo}
         itemName={state.itemName}
         trackingDetails={state.trackingDetails}
-        lastDetail={state.lastDetail}
+        lastStateDetail={state.lastStateDetail}
       />
     </div>
   );
