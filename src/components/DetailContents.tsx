@@ -6,13 +6,38 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBox, faTruck } from "@fortawesome/free-solid-svg-icons";
 
 const DetailContents = ({
-  complete,
   estimate,
   invoiceNo,
   itemName,
   lastDetail,
   trackingDetails,
 }: PropsWithChildren<Invoice>) => {
+  // trackingDetail 정보가 없을때 상단만 출력
+  if (trackingDetails.length < 1) {
+    return (
+      <div className={styles.DetailContents}>
+        <List sx={{ width: "100%" }}>
+          <ListItem>
+            <ListItemText
+              primary={`송장번호 ${invoiceNo} | ${itemName}`}
+              secondary={``}
+            />
+          </ListItem>
+        </List>
+        <Divider />
+        <ListItemText
+          className="description"
+          primary={"배송 진행 정보가 없습니다."}
+          secondary={``}
+        />
+        <div className="description">
+          본 정보는 스마트택배에서 제공받는 정보로, 실제 배송상황과 다를 수
+          있습니다.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.DetailContents}>
       <List sx={{ width: "100%" }}>
@@ -31,7 +56,6 @@ const DetailContents = ({
         </ListItem>
       </List>
       <Divider />
-      {complete ? <></> : null}
       {trackingDetails.map((items, i) => (
         <div className={styles.TrackingDetails} key={i}>
           <List sx={{ width: "100%" }}>

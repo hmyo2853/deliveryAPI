@@ -65,7 +65,7 @@ const Home: React.FC = () => {
         );
         throw new Error(`>>>> HTTP 105 Error : ${_json.msg}`);
       }
-      navigate("/detail", { state: _json });
+      navigate(`/detail/${invoiceNum}`, { state: _json });
     });
   };
 
