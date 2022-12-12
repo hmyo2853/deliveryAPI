@@ -10,7 +10,6 @@ interface RouteState {
 
 const Detail = () => {
   const state = (useLocation() as RouteState).state;
-  console.log(state);
   // /detail로 강제 이동하거나 state값이 없을때 home으로 보내기
   if (state === null) {
     return <Home />;
