@@ -1,8 +1,8 @@
 ### Toy Project - 내집앞택배
 
-택배 api를 사용한 택배 현황 조회 웹 페이지 구현하기
+<img src="src/assets/800x400.PNG" width="100%" alt="metaImg"/>
 
-<img src="src/assets/deliveryCoverImg.PNG" width="100%" alt="coverImg"/>
+택배 api를 사용한 택배 현황 조회 웹 페이지 구현하기
 
 <br>
 
@@ -21,6 +21,8 @@
 ## 최종 구현 화면
 
 - vercel - [https://nezip-delivery.vercel.app/](https://nezip-delivery.vercel.app/)
+
+<img src="src/assets/deliveryCoverImg.PNG" width="100%" alt="coverImg"/>
 
 <br>
 
