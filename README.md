@@ -44,3 +44,10 @@
 - SASS/SCSS: 변수로 css 유지보수가 용이하기 위해 사용
 - Vite: build 속도를 빠르게 하기 위해 사용
 - MUI: 통일된 UI style을 적용하기 위해 사용
+
+## 실행 방법
+
+```
+yarn install
+yarn dev
+```
